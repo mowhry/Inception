@@ -1,0 +1,68 @@
+services:
+  mariadb:
+    build:
+      context: ./srcs/requirements/mariadb
+      dockerfile: Dockerfile
+    image: mariadb
+    container_name: mariad_container
+    env_file:
+      - .env
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_volume:/var/lib/mysql
+    networks:
+      - app_net
+    restart: always
+
+  wordpress:
+    build:
+      context: ./srcs/requirements/wordpress
+      dockerfile: Dockerfile
+    image: wordpress
+    container_name: wordpress_container
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
+    ports:
+      - "9000:9000"
+    volumes:
+      - wp_volume:/var/www/html
+    networks:
+      - app_net
+    restart: always
+
+  nginx:
+    build:
+      context: ./srcs/requirements/nginx
+      dockerfile: Dockerfile
+    image: nginx
+    container_name: nginx_container
+    depends_on:
+      - wordpress
+    ports: 
+      - "443:443"
+    volumes:
+      - wp_volume:/var/www/html
+    networks:
+      - app_net
+    restart: always
+
+networks:
+  app_net:
+    driver: bridge
+
+volumes:
+  mariadb_volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/home/jskiba/docker/mariadb_volume/data"
+  wp_volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: "/home/jskiba/docker/wp_volume/data"
