@@ -68,7 +68,7 @@ Make sure your system is up to date and Docker is correctly configured before pr
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/your-username/inception.git
+   git clone https://github.com/mowhry/inception.git
    cd inception
 2. **(Optional) Environment File:**  
 - Create a .env file to store credentials (like DB_USER, DB_PASS, and WP_ADMIN_PASS).  
